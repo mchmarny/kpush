@@ -1,4 +1,4 @@
-package pkg
+package msg
 
 import (
 	"log"
@@ -6,7 +6,6 @@ import (
 	"time"
 
 	"github.com/google/uuid"
-	"github.com/mchmarny/pusheventing/pkg/types"
 )
 
 const (
@@ -34,13 +33,14 @@ func mockID() string {
 	return id.String()
 }
 
-func mockMessage(src string) *types.SimpleMessage {
+// MakeRundomMessage creates a rundom data loaded message
+func MakeRundomMessage(src string) *SimpleMessage {
 
-	return &types.SimpleMessage{
+	return &SimpleMessage{
 		ID:        mockID(),
 		Timestamp: time.Now(),
 		SourceID:  src,
-		Data: &types.SimpleMeasurements{
+		Data: &SimpleMeasurements{
 			Value1: mockString(10),
 			Value2: rand.Float32(),
 			Value3: rand.Intn(100),

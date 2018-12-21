@@ -1,15 +1,17 @@
-package pkg
+package valid
 
 import (
 	"strings"
 	"testing"
+
+	"github.com/mchmarny/pusheventing/pkg/msg"
 )
 
 func TestMockedMessageSignature(t *testing.T) {
 
 	key := []byte("not-so-secret-test-key")
 
-	msg := mockMessage("src1")
+	msg := msg.MakeRundomMessage("src1")
 	b1 := msg.Bytes()
 
 	sig1 := MakeSignature(key, b1)

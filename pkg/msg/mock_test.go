@@ -1,4 +1,4 @@
-package pkg
+package msg
 
 import (
 	"testing"
@@ -6,8 +6,8 @@ import (
 
 func TestMockedMessageUniqueness(t *testing.T) {
 
-	msg1 := mockMessage("src1")
-	msg2 := mockMessage("src2")
+	msg1 := MakeRundomMessage("src1")
+	msg2 := MakeRundomMessage("src2")
 
 	if msg1.ID == msg2.ID {
 		t.Error("Failed to generate unique IDs")

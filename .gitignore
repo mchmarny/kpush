@@ -8,5 +8,15 @@
 # Test binary, build with `go test -c`
 *.test
 
-# Output of the go coverage tool, specifically when used with LiteIDE
+# output files
 *.out
+
+# Mac OS X hidden files
+.DS_Store
+
+# Vim swap files
+.*.sw?
+.vscode
+
+# Pow and Powder config
+/.pow*

@@ -1,4 +1,4 @@
-package pkg
+package valid
 
 import (
 	"crypto/hmac"
