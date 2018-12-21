@@ -9,8 +9,10 @@ import (
 )
 
 const (
-	signaturePrefix = "sha1="
-	signatureLength = 45 // len(SignaturePrefix) + len(hex(sha1))
+	// SignatureAttributeName represents the name of the sig attribute
+	SignatureAttributeName = "sig"
+	signaturePrefix        = "sha1="
+	signatureLength        = 45 // len(SignaturePrefix) + len(hex(sha1))
 )
 
 // MakeSignature makes content signature from content payload
