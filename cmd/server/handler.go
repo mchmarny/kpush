@@ -80,6 +80,7 @@ func handlePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// TODO: do something usefull with the pushed message here
 	log.Printf("handler result: %s", pushedMsg)
 
 	// response with the parsed payload data
