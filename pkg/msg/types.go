@@ -7,6 +7,18 @@ import (
 	"time"
 )
 
+// PushData represents the raw data submitted to handler
+type PushData struct {
+	Message *PushMessage `json:"message"`
+}
+
+// PushMessage represents the message portion of PushData
+type PushMessage struct {
+	Attributes map[string]string `json:"attributes"`
+	MessageID  string            `json:"messageId"`
+	Data       []byte            `json:"data"`
+}
+
 // SimpleMessage represents a simple message content
 type SimpleMessage struct {
 	ID        string              `json:"id,omitempty"`

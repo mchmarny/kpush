@@ -1,0 +1,23 @@
+apiVersion: serving.knative.dev/v1alpha1
+kind: Service
+metadata:
+  name: msgme
+  namespace: demo
+spec:
+  runLatest:
+    configuration:
+      revisionTemplate:
+        metadata:
+          annotations:
+            autoscaling.knative.dev/minScale: "1"
+        spec:
+          container:
+            image: gcr.io/s9-demo/pusheventing:latest
+            imagePullPolicy: Always
+            env:
+            - name: RELEASE
+              value: "v0.1.2"
+            - name: KNOWN_PUBLISHER_TOKENS
+              value: "test-token,other-token,3rd-token"
+            - name: MSG_SIG_KEY
+              value: "super-long-but-not-so-secure-string"
