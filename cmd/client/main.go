@@ -45,7 +45,7 @@ func main() {
 	}
 
 	if *keyStr == "" {
-		log.Fatal("signature key required (or define PUSH_EVENTING_KEY env var)")
+		log.Fatal("signature key required (or define MSG_SIG_KEY env var)")
 	}
 	key = []byte(*keyStr)
 

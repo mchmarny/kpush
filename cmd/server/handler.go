@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/base64"
 	"encoding/json"
 	"fmt"
 	"log"
@@ -63,13 +62,8 @@ func handlePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// decode data content
-	rawData, err := base64.StdEncoding.DecodeString(string(payload.Message.Data))
-	if err != nil {
-		log.Printf("error decoding payload data: %v", err)
-		http.Error(w, fmt.Sprintf("Error decoding payload data: %s", err), http.StatusBadRequest)
-		return
-	}
+	// capture data content
+	rawData := payload.Message.Data
 
 	// check signature
 	if !valid.IsContentSignatureValid(key, rawData, payloadSig) {
@@ -79,17 +73,17 @@ func handlePost(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// parse payload data
-	msg := &msg.SimpleMessage{}
-	if err := json.Unmarshal(rawData, &msg); err != nil {
+	pushedMsg, err := msg.MessageFromBytes(rawData)
+	if err != nil {
 		log.Printf("error parsing payload data: %v", err)
 		http.Error(w, fmt.Sprintf("Error decoding payload data: %s", err), http.StatusBadRequest)
 		return
 	}
 
-	log.Printf("handler result: %s", msg)
+	log.Printf("handler result: %s", pushedMsg)
 
 	// response with the parsed payload data
 	w.WriteHeader(http.StatusAccepted)
-	json.NewEncoder(w).Encode(msg)
+	json.NewEncoder(w).Encode(pushedMsg)
 
 }

@@ -42,7 +42,10 @@ func NewPubSubPublisher(ctx context.Context, projectID, topicName string) (p *Pu
 func (p *PubSubPublisher) Publish(ctx context.Context, key []byte, content *msg.SimpleMessage) error {
 
 	// get message byte content
-	b := content.Bytes()
+	b, err := msg.MessageToBytes(content)
+	if err != nil {
+		return fmt.Errorf("Error while converting message to bytes: %v", err)
+	}
 
 	// create signature attribute
 	attr := make(map[string]string)
@@ -59,7 +62,7 @@ func (p *PubSubPublisher) Publish(ctx context.Context, key []byte, content *msg.
 	result := p.topic.Publish(ctx, msg)
 
 	// check result
-	_, err := result.Get(ctx)
+	_, err = result.Get(ctx)
 	if err != nil {
 		return fmt.Errorf("Error while publishing message: %v", err)
 	}

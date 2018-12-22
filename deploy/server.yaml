@@ -13,7 +13,7 @@ spec:
             imagePullPolicy: Always
             env:
             - name: RELEASE
-              value: "v0.2.1"
+              value: "v0.3.2"
             - name: KNOWN_PUBLISHER_TOKENS
               value: "test-token,other-token,3rd-token"
             - name: MSG_SIG_KEY

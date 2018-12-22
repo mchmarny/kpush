@@ -11,8 +11,11 @@ func TestMockedMessageSignature(t *testing.T) {
 
 	key := []byte("not-so-secret-test-key")
 
-	msg := msg.MakeRundomMessage("src1")
-	b1 := msg.Bytes()
+	m := msg.MakeRundomMessage("src1")
+	b1, err := msg.MessageToBytes(m)
+	if err != nil {
+		t.Errorf("Error getting bytes from message: %v", err)
+	}
 
 	sig1 := MakeSignature(key, b1)
 
@@ -20,7 +23,7 @@ func TestMockedMessageSignature(t *testing.T) {
 		t.Errorf("Invalid signature format: %s", sig1)
 	}
 
-	if !IsContentSignatureValid(key, msg.Bytes(), sig1) {
+	if !IsContentSignatureValid(key, b1, sig1) {
 		t.Error("Invalid message signature")
 	}
 

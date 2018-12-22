@@ -1,8 +1,6 @@
 package msg
 
 import (
-	"bytes"
-	"encoding/json"
 	"fmt"
 	"time"
 )
@@ -31,13 +29,6 @@ type SimpleMessage struct {
 func (m SimpleMessage) String() string {
 	return fmt.Sprintf("[ID: %s, On: %s, Src: %s, Data: %s]",
 		m.ID, m.Timestamp, m.SourceID, m.Data)
-}
-
-// Bytes returns byte content of the message
-func (m *SimpleMessage) Bytes() []byte {
-	reqBodyBytes := new(bytes.Buffer)
-	json.NewEncoder(reqBodyBytes).Encode(m)
-	return reqBodyBytes.Bytes()
 }
 
 // SimpleMeasurements represents data readings
