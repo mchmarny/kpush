@@ -46,5 +46,5 @@ docker:
 docker-run:
 	docker run -itP --expose 8080 $(DOCKER_USERNAME)/$(BINARY_NAME):latest
 
-deploy:
+push:
 	kubectl apply -f deploy/server.yaml
