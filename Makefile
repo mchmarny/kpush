@@ -4,6 +4,7 @@ BINARY_NAME=pusheventing
 PUBSUB_TOPIC=pusheventing
 TOKEN=${KNWON_PUBLISHER_TOKEN}
 HTTP_TARGET=https://msgme.default.knative.tech/push?publisherToken=${TOKEN}
+DOCKER_USERNAME=mchmarny
 
 
 topic:
@@ -33,11 +34,17 @@ docs:
 
 images: client-images server-images
 
-
 image:
 	gcloud builds submit \
 		--project $(GCP_PROJECT) \
 		--tag gcr.io/$(GCP_PROJECT)/${BINARY_NAME}-server:latest
 
+docker:
+	docker build -t $(BINARY_NAME) .
+	docker tag $(BINARY_NAME):latest $(DOCKER_USERNAME)/$(BINARY_NAME):latest
+
+docker-run:
+	docker run -itP --expose 8080 $(DOCKER_USERNAME)/$(BINARY_NAME):latest
+
 deploy:
-	kubectl apply -f app.yaml
+	kubectl apply -f deploy/server.yaml

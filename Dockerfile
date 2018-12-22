@@ -1,8 +1,17 @@
-FROM golang:1.11.3
-WORKDIR /go/src/github.com/mchmarny/pusheventing/cmd/server/
+FROM golang:latest as build
+ENV GO111MODULE=on
+
+WORKDIR /go/src/github.com/mchmarny/pusheventing/
 COPY . .
-RUN CGO_ENABLED=0 GOOS=linux go build -v -o app
+
+RUN go mod tidy
+
+WORKDIR /go/src/github.com/mchmarny/pusheventing/cmd/server/
+
+RUN CGO_ENABLED=0 go build
 
 FROM scratch
-COPY --from=0 /go/src/github.com/mchmarny/pusheventing/cmd/server/app .
-ENTRYPOINT ["/app"]
+COPY --from=build \
+    /go/src/github.com/mchmarny/pusheventing/cmd/server/server \
+    /app/
+ENTRYPOINT ["/app/server"]

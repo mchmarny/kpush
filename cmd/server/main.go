@@ -1,6 +1,7 @@
 package main
 
 import (
+	"encoding/json"
 	"fmt"
 	"log"
 	"net/http"
@@ -10,7 +11,9 @@ import (
 
 const (
 	defaultPort             = "8080"
-	knownPublisherTokenName = "KNWON_PUBLISHER_TOKENS"
+	portVariableName        = "PORT"
+	knownPublisherTokenName = "KNOWN_PUBLISHER_TOKENS"
+	messageSignatureKeyName = "MSG_SIG_KEY"
 	posterTokenName         = "publisherToken"
 )
 
@@ -19,33 +22,49 @@ var (
 	key                  []byte
 )
 
+func defaultHandler(w http.ResponseWriter, r *http.Request) {
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusOK)
+
+	list := []string{"POST: /post"}
+	msg := struct {
+		Handlers []string `json:"handlers"`
+	}{
+		list,
+	}
+
+	json.NewEncoder(w).Encode(msg)
+
+}
+
 func main() {
 
 	log.Print("Starting server...")
 
-	// handler
+	// handlers
+	http.HandleFunc("/", defaultHandler)
 	http.HandleFunc("/push", handlePost)
 
 	// token
-	tokens := os.Getenv("KNOWN_PUBLISHER_TOKENS")
+	tokens := os.Getenv(knownPublisherTokenName)
 	if tokens == "" {
-		log.Fatalf("KNOWN_PUBLISHER_TOKENS undefined")
+		log.Fatalf("%s undefined", knownPublisherTokenName)
 	}
 	knownPublisherTokens = strings.Split(tokens, ",")
 
 	// key
-	keyStr := os.Getenv("MSG_SIG_KEY")
+	keyStr := os.Getenv(messageSignatureKeyName)
 	if keyStr == "" {
-		log.Fatalf("MSG_SIG_KEY undefined")
+		log.Fatalf("%s undefined", messageSignatureKeyName)
 	}
 	key = []byte(keyStr)
 
 	// port
-	port := os.Getenv("PORT")
+	port := os.Getenv(portVariableName)
 	if port == "" {
 		port = defaultPort
 	}
 
-	log.Printf("Server listens on port %s \n", port)
+	log.Printf("Server started on port %s \n", port)
 	log.Fatal(http.ListenAndServe(fmt.Sprintf(":%s", port), nil))
 }
