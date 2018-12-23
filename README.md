@@ -1,12 +1,12 @@
 # kpush - push signed messages from PubSub to Knative service
 
-[GCP Cloud PubSub](https://cloud.google.com/pubsub/) is a common component of data flow pipelines. It creates Global and elastic separation between the data provider and data consumers. One of PubSub's features is an ability to [push](https://cloud.google.com/pubsub/docs/push) subscription which sends messages to the configured `webhook`. Consider this data flow.
+The use of [GCP Cloud PubSub](https://cloud.google.com/pubsub/) is common component in data flow pipelines. It creates global and elastic separation between the data provider and data consumers. One of its features is the ability to [push](https://cloud.google.com/pubsub/docs/push) subscription which sends messages to the configured `webhook`. Consider the following solution:
 
 ![kpush flow](img/kpush-flow.png)
 
-The `kpush` client publishes messages to PubSub `topic` which PubSub `subscription` then pushes to processing services, in this case an app hosted on an instance of `Knative`. This process is well [documented](https://cloud.google.com/pubsub/docs/push) including way of including [token](https://cloud.google.com/pubsub/docs/faq#security) in PubSub POST query string to ensure that only submissions from valid senders are processed by our service.
+In this case, the `kpush` client publishes messages to PubSub `topic` which the `subscription` subsequently pushes to target processing service, an app hosted on an instance of `Knative`. PubSub provides [instructions](https://cloud.google.com/pubsub/docs/push) on how to include [token](https://cloud.google.com/pubsub/docs/faq#security) in POST to ensure that only submissions from valid senders are processed by target service.
 
-`kpush` demonstrates how to add an additional level of validation by signing each message and validating that signature on the service side. The below sample illustrates the `sig` attribute which is appended to each message with the [SHA-1](https://en.wikipedia.org/wiki/SHA-1) of the `message.data` payload.
+Since this token can leak (e.g. logs), `kpush` demonstrates how to add an additional level of validation by signing each message on the client and validating that signature on the service side. The below PubSub message sample illustrates the `sig` attribute holding [SHA-1](https://en.wikipedia.org/wiki/SHA-1) of the `message.data` payload which is appended to each message.
 
 ```json
 {
@@ -23,13 +23,13 @@ The `kpush` client publishes messages to PubSub `topic` which PubSub `subscripti
 
 ## Setup
 
-The `kpush` flow includes two components: `client`, generating, signs, and publishing mocked up messages, and `server` which receives PubSub pushed messages and validates their signature.
+The `kpush` flow includes two components: `client`, generating, signing, and publishing mocked up messages, and `server` which receives PubSub pushed messages and validates their signature.
 
 > Assuming `gcloud` SDK already configured. See [gcloud docs](https://cloud.google.com/sdk/gcloud/) for instructions if you need assistance
 
 ### PubSub topic
 
-Lets start by creating the PubSub topic named `kpush` to which our client will be publishing messages.
+Let's start by creating the PubSub topic named `kpush` to which our client will be publishing messages.
 
 ```shell
 gcloud pubsub topics create kpush
@@ -43,9 +43,9 @@ Created topic [projects/YOUR_PROJECT_ID/topics/kpush].
 
 ### Knative Service
 
-The installation and configuration of [Knative](https://github.com/knative) is beyond the scope of this readme but you can find detail instructions how to configure it on [Kubernetes](https://kubernetes.io/) service offered by most Cloud Service Providers [here](https://github.com/knative/docs/tree/master/install). In this example I will be using Google's [Kubernetes Engine](https://cloud.google.com/kubernetes-engine/) (GKE) which can be easily configured with the validated version of Knative with a single checkbox.
+The installation and configuration of [Knative](https://github.com/knative) are beyond the scope of this readme, but, you can find detailed instructions on how to configure it on [Kubernetes](https://kubernetes.io/) service offered by most Cloud Service Providers [here](https://github.com/knative/docs/tree/master/install). In this example I will be using Google's [Kubernetes Engine](https://cloud.google.com/kubernetes-engine/) (GKE) which now can be easily configured with the validated version of Knative with a single checkbox.
 
-To quickly build Kantive service image you use use the [GCP Build](https://cloud.google.com/cloud-build/) service.
+Quickest way to build your service image is through [GCP Build](https://cloud.google.com/cloud-build/). Just submit the build request from within the `kpush` directory:
 
 ```shell
 gcloud builds submit \
@@ -53,7 +53,7 @@ gcloud builds submit \
 	--tag gcr.io/${GCP_PROJECT_ID}/kpush-server:latest
 ```
 
-The build service is pretty verbose in output but aventually you should see something like this
+The build service is pretty verbose in output but eventually you should see something like this
 
 ```shell
 ID           CREATE_TIME          DURATION  SOURCE                                   IMAGES                      STATUS
@@ -69,7 +69,7 @@ First, update the container `image` to the URI from the build `IMAGE` column val
 * `KNOWN_PUBLISHER_TOKENS` which holds the token we will use in PubSub URL
 * `MSG_SIG_KEY` which should be the key used by your clients to sign published messages
 
-> Note, `KNOWN_PUBLISHER_TOKENS` may include many tokens separated my comma
+> Note, `KNOWN_PUBLISHER_TOKENS` may include many tokens separated by comma
 
 Finally, to deploy `kpush` service to Knative apply the updated deployment using following command:
 
@@ -83,7 +83,7 @@ The response should be
 service.serving.knative.dev "pushme" configured
 ```
 
-To check if the service was deployed succesfully you can check the status using `kubectl get pods` command. The response should look something like this (e.g. Ready `3/3` and Status `Running`).
+To check if the service was deployed successfully you can check the status using `kubectl get pods` command. The response should look something like this (e.g. Ready `3/3` and Status `Running`).
 
 ```shell
 Should re
@@ -103,7 +103,7 @@ Go ahead, test it in browser, you should following JSON response:
 { "handlers": [ "POST: /post" ] }
 ```
 
-Target of PubSub push must also be an HTTPS server with non-self-signed certificate. The instructions on how to configure Knative with SSL certificate are are located [here](https://github.com/knative/docs/blob/master/serving/using-an-ssl-cert.md).
+Target of PubSub push must also be an HTTPS server with non-self-signed certificate. The instructions on how to configure Knative with SSL certificate are located [here](https://github.com/knative/docs/blob/master/serving/using-an-ssl-cert.md).
 
 > Note, PubSub will publish only to registering endpoints which will require you to A) Verify you have access to the domain, and B) Register your domain in APIs & services. Instructions for both can be set up [here](https://cloud.google.com/pubsub/docs/push)
 
@@ -168,5 +168,5 @@ go run main.go --project ${GCP_PROJECT_ID} \
 
 ## Disclaimer
 
-This is my personal project and it does not represent my employer. I take no responsibility for issues caused by this code. I do my best to ensure that everything works, but, if something goes wrong, my apologies is all you will get.
+This is my personal project and it does not represent my employer. I take no responsibility for issues caused by this code. I do my best to ensure that everything works, but if something goes wrong, my apologies is all you will get.
 
