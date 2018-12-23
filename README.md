@@ -1,4 +1,4 @@
-# kpush - demo of Signed message push from PubSub to Knative service
+# kpush - push signed messages from PubSub to Knative service
 
 > WIP: document not finished
 
