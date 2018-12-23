@@ -86,7 +86,6 @@ service.serving.knative.dev "pushme" configured
 To check if the service was deployed successfully you can check the status using `kubectl get pods` command. The response should look something like this (e.g. Ready `3/3` and Status `Running`).
 
 ```shell
-Should re
 NAME                                          READY     STATUS    RESTARTS   AGE
 pushme-00002-deployment-5645f48b4d-mb24j      3/3       Running   0          4h
 ```
