@@ -2,23 +2,22 @@
 
 > WIP: document not finished
 
-Webhooks have experienced somewhat of a renaissance recently as more and more developers learn about the benefits of serverless. Webhooks allow the developer to send "events" from one system to another based on triggers (e.g. GitHub fires Webhook on PR comment).
+## Why kpush
 
-Because these events are most of the time sent across public network, Webhooks need to assure that the event was submitted from a valid source, and ideally, that the content of the event (the data) has not been tempered with in transit. This is where `kpush` comes in.
+> NOTE: this is personal project for demonstration only
 
-// TODO: diagram
+Because Webhooks most of the time is send data across public network, developers need to assure that the event was submitted from a valid source, and ideally, that the content of the event (the data) has not been tempered with in transit. This is where `kpush` comes in.
 
-In this demo we will setup end-to-end pipeline using [GCP Cloud PubSub](https://cloud.google.com/pubsub/) and , a service hosted on an instance of the [Knative](https://github.com/knative/). Rather than pulling messages off the PubSub subscription, we will have the subscription push events to pre-configured Knative service for processing.
+![kpush components](img/kpush-components.png)
 
-> NOTE: this is personal project for demonstration only.
+This end-to-end pipeline will demo pushing signed event data from [GCP Cloud PubSub](https://cloud.google.com/pubsub/) to a custom service hosted on an instance of the [Knative](https://github.com/knative/).
 
 ## Setup
 
-The set up the end-to-end pipeline we will have to configure:
+To setup this demo will configure following components:
 
-* Service on Knative
+* The processing service on Knative
 * Topic and Subscription on PubSub
-* Configure Client
 
 ### Service on Knative
 
