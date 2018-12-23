@@ -6,8 +6,8 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/mchmarny/pusheventing/pkg/msg"
-	"github.com/mchmarny/pusheventing/pkg/valid"
+	"github.com/mchmarny/kpush/pkg/msg"
+	"github.com/mchmarny/kpush/pkg/valid"
 )
 
 func handlePost(w http.ResponseWriter, r *http.Request) {

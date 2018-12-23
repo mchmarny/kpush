@@ -4,7 +4,7 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/mchmarny/pusheventing/pkg/msg"
+	"github.com/mchmarny/kpush/pkg/msg"
 )
 
 func TestMockedMessageSignature(t *testing.T) {

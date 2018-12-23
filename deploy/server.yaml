@@ -1,7 +1,7 @@
 apiVersion: serving.knative.dev/v1alpha1
 kind: Service
 metadata:
-  name: msgme
+  name: pushme
   namespace: default
 spec:
   runLatest:
@@ -9,7 +9,7 @@ spec:
       revisionTemplate:
         spec:
           container:
-            image: gcr.io/s9-demo/pusheventing-server:latest
+            image: gcr.io/s9-demo/kpush-server:latest
             imagePullPolicy: Always
             env:
             - name: RELEASE

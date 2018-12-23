@@ -1,14 +1,15 @@
 package topic
 
 import (
-	"log"
 	"context"
 	"errors"
 	"fmt"
+	"log"
+
 	"cloud.google.com/go/pubsub"
 
-	"github.com/mchmarny/pusheventing/pkg/msg"
-	"github.com/mchmarny/pusheventing/pkg/valid"
+	"github.com/mchmarny/kpush/pkg/msg"
+	"github.com/mchmarny/kpush/pkg/valid"
 )
 
 // PubSubPublisher represents GCP PubSub publisher
@@ -37,7 +38,6 @@ func NewPubSubPublisher(ctx context.Context, projectID, topicName string) (p *Pu
 
 }
 
-
 // Publish publishes messages to GCP PubSub
 func (p *PubSubPublisher) Publish(ctx context.Context, key []byte, content *msg.SimpleMessage) error {
 
@@ -53,9 +53,9 @@ func (p *PubSubPublisher) Publish(ctx context.Context, key []byte, content *msg.
 
 	// create a pubsub message with the content attributes
 	msg := &pubsub.Message{
-		ID: content.ID,
+		ID:         content.ID,
 		Attributes: attr,
-		Data: b,
+		Data:       b,
 	}
 
 	// publish message

@@ -3,7 +3,7 @@ package pub
 import (
 	"context"
 
-	"github.com/mchmarny/pusheventing/pkg/msg"
+	"github.com/mchmarny/kpush/pkg/msg"
 )
 
 // Publisher represents generic message publisher

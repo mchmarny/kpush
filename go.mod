@@ -1,4 +1,4 @@
-module github.com/mchmarny/pusheventing
+module github.com/mchmarny/kpush
 
 require (
 	cloud.google.com/go v0.34.0

@@ -4,7 +4,7 @@ import (
 	"context"
 	"errors"
 
-	"github.com/mchmarny/pusheventing/pkg/msg"
+	"github.com/mchmarny/kpush/pkg/msg"
 )
 
 // HTTPPublisher basic HTTP publisher

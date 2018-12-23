@@ -9,14 +9,14 @@ import (
 	"os/signal"
 	"syscall"
 
-	"github.com/mchmarny/pusheventing/pkg/msg"
-	"github.com/mchmarny/pusheventing/cmd/client/pub"
-	"github.com/mchmarny/pusheventing/cmd/client/pub/topic"
+	"github.com/mchmarny/kpush/cmd/client/pub"
+	"github.com/mchmarny/kpush/cmd/client/pub/topic"
+	"github.com/mchmarny/kpush/pkg/msg"
 )
 
 const (
 	defaultPushEventingSource = "demoClient"
-	defaultPubSubTopicName    = "pusheventing"
+	defaultPubSubTopicName    = "kpush"
 	defaultNumberOfMessages   = 3
 )
 
@@ -25,7 +25,7 @@ var (
 	key           []byte
 	src           string
 	projectID     string
-	topicName         string
+	topicName     string
 	numOfMessages int
 	publisher     pub.Publisher
 )
@@ -35,7 +35,7 @@ func main() {
 	// flags
 	flag.StringVar(&projectID, "project", os.Getenv("GCLOUD_PROJECT"), "Project ID")
 	keyStr := flag.String("key", os.Getenv("MSG_SIG_KEY"), "Signature key")
-	flag.StringVar(&topicName, "topic", defaultPubSubTopicName, "PubSub topic name [pusheventing]")
+	flag.StringVar(&topicName, "topic", defaultPubSubTopicName, "PubSub topic name [kpush]")
 	flag.StringVar(&src, "src", defaultPushEventingSource, "Source of data [demoClient]")
 	flag.IntVar(&numOfMessages, "messages", defaultNumberOfMessages, "Number of messages to sent [3]")
 	flag.Parse()
@@ -75,7 +75,7 @@ func main() {
 	// start sending data
 	go sendMessages(ctx, status, done)
 
-	F:
+F:
 	for {
 		select {
 		case <-ctx.Done():
@@ -88,7 +88,6 @@ func main() {
 		}
 	}
 
-
 }
 
 func sendMessages(ctx context.Context, status chan<- string, done chan<- int) {
@@ -100,7 +99,7 @@ func sendMessages(ctx context.Context, status chan<- string, done chan<- int) {
 		err := publisher.Publish(ctx, key, m)
 		if err != nil {
 			status <- fmt.Sprintf("error msg[%d] %s", i, err.Error())
-		}else{
+		} else {
 			status <- fmt.Sprintf("published msg[%d] %s", i, m.ID)
 		}
 		sentCount++
