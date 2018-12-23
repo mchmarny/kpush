@@ -2,7 +2,6 @@ package main
 
 import (
 	"bytes"
-	"encoding/base64"
 	"encoding/json"
 	"io/ioutil"
 	"net/http"
@@ -34,7 +33,7 @@ func TestPostHandlerUsingSample(t *testing.T) {
 		Message: &msg.PushMessage{
 			Attributes: make(map[string]string),
 			MessageID:  makeID(),
-			Data:       []byte(base64.StdEncoding.EncodeToString(b)),
+			Data:       b,
 		},
 	}
 	d.Message.Attributes[valid.SignatureAttributeName] = s
