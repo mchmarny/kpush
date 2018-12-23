@@ -54,6 +54,13 @@ func handlePost(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	// check payload integrity
+	if payload.Message == nil || payload.Message.Attributes == nil {
+		log.Print("invalid payload")
+		http.Error(w, "Invalid payload", http.StatusBadRequest)
+		return
+	}
+
 	// get signature
 	payloadSig := payload.Message.Attributes[valid.SignatureAttributeName]
 	if payloadSig == "" {

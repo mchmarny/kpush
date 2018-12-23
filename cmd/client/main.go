@@ -10,6 +10,7 @@ import (
 	"syscall"
 
 	"github.com/mchmarny/kpush/cmd/client/pub"
+	"github.com/mchmarny/kpush/cmd/client/pub/http"
 	"github.com/mchmarny/kpush/cmd/client/pub/topic"
 	"github.com/mchmarny/kpush/pkg/msg"
 )
@@ -24,6 +25,7 @@ var (
 	canceling     bool
 	key           []byte
 	src           string
+	url           string
 	projectID     string
 	topicName     string
 	numOfMessages int
@@ -37,6 +39,7 @@ func main() {
 	keyStr := flag.String("key", os.Getenv("MSG_SIG_KEY"), "Signature key")
 	flag.StringVar(&topicName, "topic", defaultPubSubTopicName, "PubSub topic name [kpush]")
 	flag.StringVar(&src, "src", defaultPushEventingSource, "Source of data [demoClient]")
+	flag.StringVar(&url, "url", "", "(Optional) Target URL where data will be sent directly, no topic")
 	flag.IntVar(&numOfMessages, "messages", defaultNumberOfMessages, "Number of messages to sent [3]")
 	flag.Parse()
 
@@ -52,13 +55,20 @@ func main() {
 	// context
 	ctx, cancel := context.WithCancel(context.Background())
 
-	// TODO: Make this dynamic based on flag
-	p, err := topic.NewPubSubPublisher(ctx, projectID, topicName)
-	if err != nil {
-		log.Fatalf("error creating publisher: %v", err)
+	var err error
+	if url == "" {
+		log.Printf("Using topic publisher: %s:%s", projectID, topicName)
+		publisher, err = topic.NewPubSubPublisher(ctx, projectID, topicName)
+		if err != nil {
+			log.Fatalf("error creating PubSub publisher: %v", err)
+		}
+	} else {
+		log.Printf("Using http publisher: %s", url)
+		publisher, err = http.NewHTTPPublisher(ctx, url)
+		if err != nil {
+			log.Fatalf("error creating HTTP publisher: %v", err)
+		}
 	}
-
-	publisher = p
 
 	go func() {
 		ch := make(chan os.Signal)
