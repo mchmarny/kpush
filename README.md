@@ -1,11 +1,5 @@
 # kpush - push signed messages from PubSub to Knative service
 
-> WIP: document not finished
-
-> NOTE: this is personal project for demonstration only
-
-## Why
-
 [GCP Cloud PubSub](https://cloud.google.com/pubsub/) is a common component of data flow pipelines. It creates Global and elastic separation between the data provider and data consumers. One of PubSub's features is an ability to [push](https://cloud.google.com/pubsub/docs/push) subscription which sends messages to the configured `webhook`. Consider this data flow.
 
 ![kpush flow](img/kpush-flow.png)
