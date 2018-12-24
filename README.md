@@ -165,6 +165,16 @@ go run main.go --project ${GCP_PROJECT_ID} \
                --messages 10
 ```
 
+## How to use kpush in your project
+
+You can import `kpush` into your project as a package
+
+```shell
+go get -u github.com/mchmarny/kpush
+```
+
+For demonstration how you can use `kpush` in your project see provided [example](https://github.com/mchmarny/kpush/blob/master/example/main.go).
+
 ## Disclaimer
 
 This is my personal project and it does not represent my employer. I take no responsibility for issues caused by this code. I do my best to ensure that everything works, but if something goes wrong, my apologies is all you will get.
