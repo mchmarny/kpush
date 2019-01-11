@@ -10,7 +10,7 @@ import (
 	"github.com/mchmarny/kpush/pkg/valid"
 )
 
-func handlePost(w http.ResponseWriter, r *http.Request) {
+func signedMessageHandler(w http.ResponseWriter, r *http.Request) {
 
 	w.Header().Set("Content-Type", "application/json")
 

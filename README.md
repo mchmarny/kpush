@@ -133,7 +133,7 @@ cd cmd/client
 ...and run the following command:
 
 ```shell
-go run main.go --project ${GCP_PROJECT_ID} \
+go run main.go --project ${PROJECT_ID} \
                --key ${MSG_SIG_KEY} \
                --topic kpush
 ```
@@ -159,7 +159,7 @@ A successful end-to-end run of the pipeline will result in `202` status code fro
 `kpush` also includes an `HTTPPublisher` which can skip the PubSub entirely and submit signed messages directly to the Knative service. To do that include `url` parameter in the `kpush client` command like this
 
 ```shell
-go run main.go --project ${GCP_PROJECT_ID} \
+go run main.go --project ${PROJECT_ID} \
                --key ${MSG_SIG_KEY} \
                --url https://pushme.demo.knative.tech/push?publisherToken=${MYTOKEN} \
                --messages 10

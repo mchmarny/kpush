@@ -18,6 +18,6 @@ spec:
             - name: RELEASE
               value: "v0.3.2"
             - name: KNOWN_PUBLISHER_TOKENS
-              value: "test-token,other-token,3rd-token"
+              value: "t1-86b364g2c3c1879f,t2-86b448a1d4c1879f"
             - name: MSG_SIG_KEY
-              value: "super-long-but-not-so-secure-string"
+              value: "super-long-secret-here"

@@ -43,7 +43,7 @@ func main() {
 
 	// handlers
 	http.HandleFunc("/", defaultHandler)
-	http.HandleFunc("/push", handlePost)
+	http.HandleFunc("/push", signedMessageHandler)
 
 	// token
 	tokens := os.Getenv(knownPublisherTokenName)

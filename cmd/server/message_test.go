@@ -48,7 +48,7 @@ func TestPostHandlerUsingSample(t *testing.T) {
 	req.URL.RawQuery = q.Encode()
 
 	rr := httptest.NewRecorder()
-	handler := http.HandlerFunc(handlePost)
+	handler := http.HandlerFunc(signedMessageHandler)
 	handler.ServeHTTP(rr, req)
 
 	if status := rr.Code; status != http.StatusAccepted {
